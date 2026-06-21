@@ -69,3 +69,50 @@ def signout_confirm():
     session.pop('signinedMemberId', None)
 
     return redirect('/')
+
+# /member/modify_form
+@member_bp.route('/modify_form')
+def modify_form():
+    members = load_members()
+    member = members[session.get('signinedMemberId')]   #현재 로그인되어 았는 회원정보 수집
+
+    return render_template(
+        'modify_form.html',
+        member = member
+    )
+
+# /member/modify_confirm
+@member_bp.route('/modify_confirm', methods=['POST'])
+def modify_confirm():
+
+    '''
+    현재 로그인되어 있는 회원 id가 'gildong'일때
+    '''
+
+    mId= request.form['mId']
+    mPw = request.form['mPw']
+    mMail = request.form['mMail']
+    mPhone = request.form['mPhone']
+
+    members = load_members()
+    member = members[mId]
+    member['mPw'] = mPw
+    member['mMail'] = mMail
+    member['mPhone'] = mPhone
+    save_members(members)
+
+    return render_template('modify_result.html')
+
+
+# /member/delete_confirm
+@member_bp.route('/delete_confirm')
+def delete_confirm():
+
+    members = load_members()
+    signinedMemberId = session.get('signinedMemberId')
+    del members[signinedMemberId]
+    save_members(members)
+
+    session.clear()
+
+    return render_template('delete_result.html')
