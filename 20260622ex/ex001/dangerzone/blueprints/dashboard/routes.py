@@ -38,7 +38,8 @@ def generate_frames():
         frame = get_frame()
 
         if frame is None:
-            print(frame.shape)
+            # print(frame.shape)
+            print("frame is None")
             time.sleep(0.1)
             continue
 
